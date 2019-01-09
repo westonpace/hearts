@@ -1,0 +1,40 @@
+jobs:
+  include:
+    - stage: component
+      language: node_js
+      node_js:
+        - '10'
+
+      sudo: true
+      dist: xenial
+
+      branches:
+        only:
+        - master
+
+      before_install:
+      - cd ui
+
+      before_script:
+      - export CHROME_BIN=/usr/bin/google-chrome
+      - export DISPLAY=:99.0
+      - sh -e /etc/init.d/xvfb start
+      - sudo apt-get update
+      - sudo apt-get install -y libappindicator1 fonts-liberation
+      - wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+      - sudo dpkg -i google-chrome*.deb
+
+      script:
+      - ng test --watch false
+      - ng build --prod
+    - stage: component
+      language: csharp
+      solution: hearts-backend.sln
+      mono: none
+      dotnet: 2.2.101
+      before_install:
+      - cd backend
+      install:
+      - nuget restore hearts-backend.sln
+      script:
+      - dotnet test
