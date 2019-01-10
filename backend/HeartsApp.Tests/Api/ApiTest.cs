@@ -10,6 +10,7 @@ namespace Hearts.Application
 
     public class ApiTest : BaseTest
     {
+        private const int ApiTestRandomSeed = 42;
         protected HttpClient client;
         protected IntegrationTestWebApplicationFactory factory;
 
@@ -17,6 +18,7 @@ namespace Hearts.Application
         public new void Init()
         {
             Environment.SetEnvironmentVariable("Database__ConnectionString", connectionString);
+            Environment.SetEnvironmentVariable("App__RandomSeed", ApiTestRandomSeed.ToString());
             factory = new IntegrationTestWebApplicationFactory(loggerFactory);
             client = factory.CreateClient();
         }

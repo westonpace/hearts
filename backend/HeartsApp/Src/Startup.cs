@@ -32,6 +32,11 @@ namespace Hearts.Application
             {
                 throw new Exception("The property Database:ConnectionString must be specified somehow");
             }
+            var randomSeed = _config["App:RandomSeed"];
+            if (randomSeed != null)
+            {
+                masterRandom = new Random(int.Parse(randomSeed));
+            }
             // Framework
             services.AddMvc().AddJsonOptions(options =>
             {
