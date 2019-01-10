@@ -49,6 +49,6 @@ jobs:
       - dotnet restore
       before_script:
       - psql -c 'create database travis_ci_test;' -U postgres
-      - dotnet ef database update -P HeartsApp
+      - dotnet ef database update --project HeartsApp
       script:
       - dotnet test
