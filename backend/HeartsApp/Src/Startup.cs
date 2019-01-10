@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
@@ -64,7 +65,18 @@ namespace Hearts.Application
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStaticFiles();
             app.UseMvc();
+            app.Use((next) => async (requestContext) =>
+            {
+                if (!requestContext.Request.Path.StartsWithSegments(PathString.FromUriComponent("/api")))
+                {
+                    requestContext.Response.ContentType = "text/html";
+                    await requestContext.Response.SendFileAsync(Path.Combine(env.WebRootPath,"index.html"));
+                    return;
+                }
+                await next(requestContext);
+            });
         }
     }
 }

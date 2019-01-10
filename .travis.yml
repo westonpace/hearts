@@ -5,17 +5,13 @@ addons:
 
 jobs:
   include:
-    - stage: component
+    - stage: component test
       language: node_js
       node_js:
         - '10'
 
       sudo: true
       dist: xenial
-
-      branches:
-        only:
-        - master
 
       before_install:
       - cd ui
@@ -32,7 +28,8 @@ jobs:
       script:
       - ng test --watch false
       - ng build --prod
-    - stage: component
+
+    - stage: component test
       services:
       - postgresql
       dist: xenial
@@ -43,7 +40,6 @@ jobs:
       mono: none
       dotnet: 2.2.101
       before_install:
-      - sudo apt-get install -y dpkg
       - cd backend
       install:
       - dotnet restore
@@ -52,3 +48,36 @@ jobs:
       - dotnet ef database update --project HeartsApp
       script:
       - dotnet test
+    - stage: Build
+      dist: xenial
+      language: csharp
+      solution: hearts-backend.sln
+      mono: none
+      dotnet: 2.2.101
+      before_install:
+      - cp -r ui/dist/hearts-ui/* backend/HeartsApp/wwwroot
+      - cd backend
+      script:
+      - dotnet publish -c Release      
+    - stage: E2E
+      services:
+      - postgresql
+      dist: xenial
+      language: node_js
+      node_js:
+      - '10'
+      env:
+      - Database__ConnectionString="Host=localhost;Database=travis_ci_test;Username=postgres"
+      sudo: true
+      before_script:
+      - export CHROME_BIN=/usr/bin/google-chrome
+      - export DISPLAY=:99.0
+      - sh -e /etc/init.d/xvfb start
+      - cd backend/HeartsApp/bin/Release/netcoreapp2.2/publish
+      - dotnet HeartsApp.dll &
+      - sleep 10
+      - cd ../../../../../../ui
+      script:
+      - npm run e2e-local
+    
+
