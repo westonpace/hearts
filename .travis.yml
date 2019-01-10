@@ -101,6 +101,7 @@ jobs:
       - cd ui
       - mkdir app
       - aws s3 sync s3://hearts-build/appbuild/$TRAVIS_BUILD_ID app
+      - chmod 755 app/HeartsApp
       before_script:
       - export CHROME_BIN=/usr/bin/google-chrome
       - export DISPLAY=:99.0
