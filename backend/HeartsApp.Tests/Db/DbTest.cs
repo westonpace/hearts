@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
@@ -12,7 +13,6 @@ namespace Hearts.Application
 
     public class DbTest : BaseTest
     {
-        private const string ConnectionString = "Host=localhost;Database=hearts;Username=postgres;Password=Xsw23edc";
 
         [SetUp]
         public async new Task Init()
@@ -45,7 +45,7 @@ namespace Hearts.Application
         private void ConfigureDatabase(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder
-              .UseNpgsql(ConnectionString)
+              .UseNpgsql(connectionString)
               .UseLoggerFactory(loggerFactory);
         }
 

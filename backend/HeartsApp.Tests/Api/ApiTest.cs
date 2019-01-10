@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -15,6 +16,7 @@ namespace Hearts.Application
         [SetUp]
         public new void Init()
         {
+            Environment.SetEnvironmentVariable("Database__ConnectionString", connectionString);
             factory = new IntegrationTestWebApplicationFactory(loggerFactory);
             client = factory.CreateClient();
         }

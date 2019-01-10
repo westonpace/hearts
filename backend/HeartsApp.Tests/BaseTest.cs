@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NUnit.Framework;
@@ -14,6 +15,7 @@ namespace Hearts.Application
     {
         private Logger logger;
         protected ILoggerFactory loggerFactory;
+        protected string connectionString;
 
         [SetUp]
         public void Init()
@@ -22,6 +24,9 @@ namespace Hearts.Application
             DeleteLogFile(logFilename);
             CreateLogger(logFilename);
             loggerFactory = new SerilogLoggerFactory(logger, false);
+            var config = LoadConfig();
+            connectionString = config["Database:ConnectionString"];
+
         }
 
         [TearDown]
@@ -33,6 +38,14 @@ namespace Hearts.Application
         protected ILogger<T> GetLogger<T>()
         {
             return loggerFactory.CreateLogger<T>();
+        }
+
+        private IConfigurationRoot LoadConfig()
+        {
+            return new ConfigurationBuilder()
+              .AddUserSecrets<DbTest>()
+              .AddEnvironmentVariables()
+              .Build();
         }
 
         private void CreateLogger(string filename)
