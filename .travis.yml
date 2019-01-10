@@ -33,7 +33,11 @@ jobs:
       - ng test --watch false
       - ng build --prod
     - stage: component
+      services:
+      - postgresql
       dist: xenial
+      env:
+      - Database__ConnectionString="Host=localhost;Database=travis_ci_test;Username=postgres"
       language: csharp
       solution: hearts-backend.sln
       mono: none
@@ -43,5 +47,7 @@ jobs:
       - cd backend
       install:
       - dotnet restore
+      before_script:
+      - psql -c 'create database travis_ci_test;' -U postgres
       script:
       - dotnet test
