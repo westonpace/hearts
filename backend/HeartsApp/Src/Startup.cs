@@ -59,10 +59,13 @@ namespace Hearts.Application
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
         {
             // Migration
-            using (var scope = serviceProvider.CreateScope())
+            if (!env.IsDevelopment())
             {
-                var context = scope.ServiceProvider.GetRequiredService<HeartsContext>();
-                context.Database.Migrate();
+                using (var scope = serviceProvider.CreateScope())
+                {
+                    var context = scope.ServiceProvider.GetRequiredService<HeartsContext>();
+                    context.Database.Migrate();
+                }
             }
             var liveMigrations = new List<ILiveMigration>()
             {
