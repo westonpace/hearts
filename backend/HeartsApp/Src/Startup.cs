@@ -48,19 +48,17 @@ namespace Hearts.Application
             services.AddScoped<GetShuffledDeckUseCase>();
             // Controllers
             services.AddScoped<HomeController>();
+        }
 
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IServiceProvider serviceProvider)
+        {
             // Migration
-            var sp = services.BuildServiceProvider();
             var liveMigrations = new List<ILiveMigration>()
             {
                 new SeedAppStatistics()
             };
-            new LiveMigrationService(liveMigrations).MigrateAsync(sp).Wait();
+            new LiveMigrationService(liveMigrations).MigrateAsync(serviceProvider).Wait();
 
-        }
-
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
