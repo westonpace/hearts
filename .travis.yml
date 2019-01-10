@@ -38,6 +38,7 @@ jobs:
         bucket: hearts-build
         upload-dir: $TRAVIS_BUILD_ID
         local_dir: dist/hearts-ui
+        region: us-west-1
         skip_cleanup: true
 
     - stage: component test
