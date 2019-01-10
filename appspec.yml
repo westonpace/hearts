@@ -1,0 +1,18 @@
+version: 1.BUILD_NUMBER
+os: linux
+files:
+  - source: /
+    destination: /var/www/hearts
+permissions:
+  - object: /var/www/hearts
+    pattern: HeartsApp
+    mode: 755
+    type:
+      - file
+hooks:
+  ApplicationStart:
+    - location: scripts/start.sh
+      timeout: 300
+  ApplicationStop:
+    - location: scripts/stop.sh
+      timeout: 300
