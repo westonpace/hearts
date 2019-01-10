@@ -2,7 +2,7 @@ addons:
   apt:
     packages:
     - dpkg
-    
+
 jobs:
   include:
     - stage: component
@@ -33,6 +33,7 @@ jobs:
       - ng test --watch false
       - ng build --prod
     - stage: component
+      dist: xenial
       language: csharp
       solution: hearts-backend.sln
       mono: none
