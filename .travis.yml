@@ -115,21 +115,19 @@ jobs:
       - cd ..
       - sed -i 's/BUILD_NUMBER/$TRAVIS_BUILD_NUMBER/' appspec.yml
       - cp appspec.yml ui/app/appspec.yml
+      - cp -r backend/scripts ui/app
+      - cp -r backend/deploy/* ui/app
       - tar -cvf app.tar ui/app
-      - bzip2 app.tar
-      - mkdir build
-      - mv app.tar.bz2 build
+      - aws deploy push --application-name Hearts --s3-location s3://hearts-build/app.zip --source ui/app
       deploy:
-        provider: s3
+        provider: codedeploy
         access_key_id:
           secure: "b+vxSy/7PIuYSlzi2tzSm8+Tik72IA5DPS28AphUIemXS31bv70JZCbJ2JyVBkzEzxToYlN6iOIC3xixrywSiSuj3oGJ/yRE6xuz4nvuwq1kWHYG4EJgX3O0l+fST7TNCQ3L1NqdJ8vRTEpZ/CymHfqUCzJVbeEBFOXIDdfX1Cc2NfnNpAZ2hkMYcr04C85k3n7lfsyD+eqtb9e+YD24D5Akb3ClBo4ECfPI7eUGf1xkYMwy0ZMoCxeUTSRIgD50DWNhCSoYWWHhsuA5vo0ylgJy+rpwNXjuoDACs3HYRQUgB/YhajD9quWTZn8mu33LE7jeRllD93VNFMTjSbiB3z5oitauEPoPEMUJFbJOybfVTvBUT3ZnFzEv7da2Hs0Pfm48GjYOiRcbV/cmBDqlRuM/OQgA94N3R/J337FLAesmpPhDvYme8fLB62s7/dk5X2jdpN1cjl+AboUlj/2IVRXiKy9M3gGdJMy+4rjG4Ow4o1Y0KozNlyNIoHzUvAH2z+89MfB4lobx5Y88Yos02voOZ1gbmmtxuaqUS1dUkuJB9+t7OAxjnLmDOoM2lmPyhyIzTOTq/vSy+sBN9Ec2W6jI0c/gn9WdaBWQFb29i6fvUt7hTvagBAvuSDnH0MTf3RdAyBZJqy3nX+5HO4taKNHXsVBjlFIM/XuDJSI9V74="
         secret_access_key:
           secure: "WTjb1QVPV+Gy7mgYFUGUaZ9ZCuWBB+dalRgAzN1aCkAcrIn1HURmzFEdYySrRrLgz6SiTDL5uxedhIKa6Cs2uxymT72pn2CY6EE9B2nU8RjeVcEvaqO4UQIsfWUVcXd22exnx50uf4SerBRFUirNtXfHEkbUvIxMVM32LsFErVkAOtfB1wcXmv9RiCUR2pizNqbrj8GcDIq4ugRWriXXEYmfDkFnMwrr72eNAPBZHK9nlD65qibdtGN6my1beP0jjIrgFLVUTTpmEDj67COPtD90bMbXutUwageQuzRkJxj8rjVQjAnyNp76lqJA4ZmbdgwX6hjrbGlAtPW2e/+80AzmmwiZ40ukV9MQ1V0b24fGv+FqBiFCT4nJJ6jPwvgcVMeJ9VZc25Oi/GMkceeVGbw7BoL4SlROEojSQJvXVPidW4PCgW5zhPv/F05TnbqJBU7nf0CEYfTDxKcW5U/ZvOCafH9m0DtwdG5pclhDGGF8uR/42JBag4zUoiC1X/979A6MxvVUxVDdAJLlrUrubeh+E9t36qF9faU8lCDZkKmnOrCJ4ZFBjjk0EL/Mht7v7waYLsOKVSEvL7N4yRxFy1NiXXo6Gl6Zb8kA1K++ew/m2qKTNuRIuIK8aiadUXOen3EV0sZ1j3gR91Zg8Sek6aGroUzB2uvQ7VE+Q74B57c="
         bucket: hearts-build
-        upload-dir: finalbuild/$TRAVIS_BUILD_ID
-        local_dir: build
+        key: app.zip
         region: us-west-1
-        skip_cleanup: true
-
-    
-
+        application: Hearts
+        deployment_group: HeartsDepGroup
+        

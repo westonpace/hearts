@@ -1,4 +1,4 @@
-version: 1.BUILD_NUMBER
+version: 0.0
 os: linux
 files:
   - source: /
