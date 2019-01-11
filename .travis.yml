@@ -117,8 +117,7 @@ jobs:
       - cp appspec.yml ui/app/appspec.yml
       - cp -r backend/scripts ui/app
       - cp -r backend/deploy/* ui/app
-      - tar -cvf app.tar ui/app
-      - aws deploy push --application-name Hearts --s3-location s3://hearts-build/app.zip --source ui/app
+      - aws deploy push --region us-west-1 --application-name Hearts --s3-location s3://hearts-build/app.zip --source ui/app
       deploy:
         provider: codedeploy
         access_key_id:
@@ -130,4 +129,3 @@ jobs:
         region: us-west-1
         application: Hearts
         deployment_group: HeartsDepGroup
-        
